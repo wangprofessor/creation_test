@@ -1,4 +1,4 @@
-package com.creation.wangshouchao.creation_test;
+package com.creation.test;
 
 import org.junit.Test;
 

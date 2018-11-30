@@ -1,4 +1,4 @@
-package com.creation.wangshouchao.creation_test;
+package com.creation.test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.creation.wangshouchao.creation_test", appContext.getPackageName());
+        assertEquals("com.creation.test", appContext.getPackageName());
     }
 }

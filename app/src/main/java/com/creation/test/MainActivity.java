@@ -1,4 +1,4 @@
-package com.creation.wangshouchao.creation_test;
+package com.creation.test;
 
 import android.content.Intent;
 import android.os.Bundle;
