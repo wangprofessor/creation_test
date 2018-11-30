@@ -1,4 +1,4 @@
-package com.creation.test;
+package com.creation.test.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,8 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.creation.test.R;
 
 import java.util.ArrayList;
 
