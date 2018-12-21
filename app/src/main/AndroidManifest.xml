@@ -19,6 +19,13 @@
         <activity android:name=".span.SpanActivity" />
         <activity android:name=".touch.TouchActivity" />
         <activity android:name=".scheme.SchemeActivity" />
+        <activity android:name=".scheme.TargetActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="test123"/>
+            </intent-filter>
+        </activity>
     </application>
-
 </manifest>
