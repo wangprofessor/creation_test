@@ -1,5 +1,6 @@
 package com.creation.test.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.creation.test.R;
+import com.creation.test.scheme.SchemeActivity;
+import com.creation.test.span.SpanActivity;
+import com.creation.test.touch.TouchActivity;
 
 import java.util.ArrayList;
 
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 return new RecyclerView.ViewHolder(textView) {};
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
                 final Data data = list.get(position);
@@ -62,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initList(ArrayList<Data> list) {
-        list.add(new Data("main", MainActivity.class));
+        list.add(new Data("span", SpanActivity.class));
+        list.add(new Data("touch", TouchActivity.class));
+        list.add(new Data("scheme", SchemeActivity.class));
     }
 
     private static class Data {

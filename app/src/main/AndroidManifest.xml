@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".span.SpanActivity" />
+        <activity android:name=".touch.TouchActivity" />
+        <activity android:name=".scheme.SchemeActivity" />
     </application>
 
 </manifest>
