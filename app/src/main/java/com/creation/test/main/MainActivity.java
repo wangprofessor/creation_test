@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.creation.test.R;
+import com.creation.test.clip.ClipActivity;
 import com.creation.test.scheme.SchemeActivity;
 import com.creation.test.span.SpanActivity;
 import com.creation.test.touch.TouchActivity;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("span", SpanActivity.class));
         list.add(new Data("touch", TouchActivity.class));
         list.add(new Data("scheme", SchemeActivity.class));
+        list.add(new Data("clip", ClipActivity.class));
     }
 
     private static class Data {

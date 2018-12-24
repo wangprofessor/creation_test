@@ -27,5 +27,6 @@
                 <data android:scheme="test123"/>
             </intent-filter>
         </activity>
+        <activity android:name=".clip.ClipActivity" />
     </application>
 </manifest>

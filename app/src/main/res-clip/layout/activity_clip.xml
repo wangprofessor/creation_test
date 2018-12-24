@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.creation.test.clip.ClipFrameLayout
+        android:id="@+id/clip_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:background="#00ff00"
+        >
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:textSize="40dp"
+            android:text="123456789"
+            android:background="#ff0000"
+            />
+    </com.creation.test.clip.ClipFrameLayout>
+
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|bottom"
+        android:text="play"
+        />
+
+    <Button
+        android:id="@+id/reverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="reverse"
+        android:layout_gravity="right|bottom"
+        />
+</FrameLayout>
