@@ -1,4 +1,4 @@
-package com.creation.test.main;
+package com.creation.test;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.creation.test.R;
+import com.creation.test.animation.AnimationActivity;
 import com.creation.test.clip.ClipActivity;
 import com.creation.test.scheme.SchemeActivity;
 import com.creation.test.span.SpanActivity;
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("touch", TouchActivity.class));
         list.add(new Data("scheme", SchemeActivity.class));
         list.add(new Data("clip", ClipActivity.class));
+        list.add(new Data("animation", AnimationActivity.class));
     }
 
     private static class Data {

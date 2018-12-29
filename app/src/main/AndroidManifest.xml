@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".main.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,10 +26,12 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="test123"/>
+                <data android:scheme="test"/>
             </intent-filter>
         </activity>
 
         <activity android:name=".clip.ClipActivity" />
+        <activity android:name=".animation.AnimationActivity" />
+        <activity android:name=".scale_animation.ScaleAnimationActivity" />
     </application>
 </manifest>

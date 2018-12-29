@@ -17,7 +17,7 @@ public class SchemeActivity extends Activity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("test123://conversation/picker?external_msg_type=18&external_msg_content={\"update_time\":\"1545390461591\"}"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("test://conversation/picker?external_msg_type=18&external_msg_content={\"update_time\":\"1545390461591\"}"));
                 startActivity(intent);
             }
         });
