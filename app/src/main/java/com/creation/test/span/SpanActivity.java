@@ -1,16 +1,21 @@
 package com.creation.test.span;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Spannable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.widget.TextView;
 
 import com.creation.test.R;
+
+import cn.iwgang.simplifyspan.SimplifySpanBuild;
+import cn.iwgang.simplifyspan.other.SpecialGravity;
+import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
+import cn.iwgang.simplifyspan.unit.SpecialTextUnit;
 
 public class SpanActivity extends Activity {
     @Override
@@ -19,14 +24,33 @@ public class SpanActivity extends Activity {
         setContentView(R.layout.activity_span);
         TextView textView = findViewById(R.id.text);
 
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder("123456789");
+        SimplifySpanBuild textBuilder = new SimplifySpanBuild("");
+        Bitmap bitmap = getBitmapFromVectorResource(R.drawable.shape);
+        textBuilder.append(new SpecialImageUnit(this, "error", bitmap, 40, 40, SpecialGravity.TOP));
+        textBuilder.append("123");
+        SpannableStringBuilder build = textBuilder.build();
+        textView.setText(build);
+    }
 
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#009ad6"));
-        spannableStringBuilder.setSpan(colorSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+    private Bitmap getBitmapFromVectorResource(int resourceId) {
+        Drawable drawable = obtainDrawableFromVectorResource(resourceId);
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+        drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
 
-        StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
-        spannableStringBuilder.setSpan(styleSpan, 1, 2, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-
-        textView.setText(spannableStringBuilder);
+    private Drawable obtainDrawableFromVectorResource(int resourceId) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return VectorDrawableCompat.create(
+                    getResources(),
+                    resourceId,
+                    getTheme()
+            );
+        } else {
+            return getResources().getDrawable(resourceId, getTheme());
+        }
     }
 }
