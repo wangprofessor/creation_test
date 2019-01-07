@@ -3,13 +3,16 @@ package com.creation.unit_test.kotlin
 object CommonTest {
     @JvmStatic
     fun main(args: Array<String>) {
-        val run: () -> Unit = {
-            test()
+
+        val ob = Runnable {
+            test {
+
+            }
         }
-        run.invoke()
+        ob.run()
     }
 
-    fun test() {
-        System.out.println()
+    fun test(cab: () -> Unit) {
+        System.out.println("123")
     }
 }
