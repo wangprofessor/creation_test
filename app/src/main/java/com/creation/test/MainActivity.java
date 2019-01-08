@@ -1,7 +1,6 @@
 package com.creation.test;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
