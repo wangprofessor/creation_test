@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +15,32 @@ import android.widget.TextView;
 
 import com.creation.test.animation.AnimationActivity;
 import com.creation.test.clip.ClipActivity;
+import com.creation.test.measure.MeasureActivity;
+import com.creation.test.measure.MeasureService;
 import com.creation.test.scheme.SchemeActivity;
 import com.creation.test.span.SpanActivity;
 import com.creation.test.touch.TouchActivity;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "MainActivity");
+
+        MeasureService.Companion.instance().init(this, new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                return null;
+            }
+        });
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -46,16 +63,14 @@ public class MainActivity extends AppCompatActivity {
 
             @SuppressLint("SetTextI18n")
             @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
                 final Data data = list.get(position);
                 TextView textView = (TextView) viewHolder.itemView;
                 textView.setText((position + 1) + "." + data.text);
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setClass(MainActivity.this, data.clazz);
-                        startActivity(intent);
+                        startPosition(list, position);
                     }
                 });
             }
@@ -65,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
                 return list.size();
             }
         });
+
+        startPosition(list, 5);
+    }
+
+    private void startPosition(List<Data> list, int position) {
+        Data data = list.get(position);
+        Intent intent = new Intent();
+        intent.setClass(MainActivity.this, data.clazz);
+        startActivity(intent);
     }
 
     private void initList(ArrayList<Data> list) {
@@ -73,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("scheme", SchemeActivity.class));
         list.add(new Data("clip", ClipActivity.class));
         list.add(new Data("animation", AnimationActivity.class));
+        list.add(new Data("measure", MeasureActivity.class));
     }
 
     private static class Data {

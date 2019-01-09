@@ -13,6 +13,6 @@ object CommonTest {
     }
 
     fun test(cab: () -> Unit) {
-        System.out.println("123")
+        System.out.println("a123")
     }
 }

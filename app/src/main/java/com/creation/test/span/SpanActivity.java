@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.creation.test.R;
@@ -18,8 +19,12 @@ import cn.iwgang.simplifyspan.unit.SpecialImageUnit;
 import cn.iwgang.simplifyspan.unit.SpecialTextUnit;
 
 public class SpanActivity extends Activity {
+    public static final String TAG = "SpanActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e(TAG, "SpanActivity");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_span);
         TextView textView = findViewById(R.id.text);
@@ -27,7 +32,7 @@ public class SpanActivity extends Activity {
         SimplifySpanBuild textBuilder = new SimplifySpanBuild("");
         Bitmap bitmap = getBitmapFromVectorResource(R.drawable.shape);
         textBuilder.append(new SpecialImageUnit(this, "error", bitmap, 40, 40, SpecialGravity.TOP));
-        textBuilder.append("123");
+        textBuilder.append("a123");
         SpannableStringBuilder build = textBuilder.build();
         textView.setText(build);
     }

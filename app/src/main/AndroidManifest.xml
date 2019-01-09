@@ -9,7 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,6 +34,10 @@
 
         <activity android:name=".clip.ClipActivity" />
         <activity android:name=".animation.AnimationActivity" />
-        <activity android:name=".scale_animation.ScaleAnimationActivity" />
+
+        <activity
+            android:name=".measure.MeasureActivity"
+            />
+
     </application>
 </manifest>
