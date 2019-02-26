@@ -1,7 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="faceu.lemon.com.libarr2">
-
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
-</manifest>
-
