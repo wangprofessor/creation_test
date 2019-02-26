@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.creation.test.animation.AnimationActivity;
 import com.creation.test.clip.ClipActivity;
+import com.creation.test.dispatch.DispatchActivity;
 import com.creation.test.measure.MeasureActivity;
 import com.creation.test.measure.MeasureService;
 import com.creation.test.scheme.SchemeActivity;
@@ -80,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
                 return list.size();
             }
         });
-
-        startPosition(list, 5);
     }
 
     private void startPosition(List<Data> list, int position) {
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("clip", ClipActivity.class));
         list.add(new Data("animation", AnimationActivity.class));
         list.add(new Data("measure", MeasureActivity.class));
+        list.add(new Data("dispatch", DispatchActivity.class));
     }
 
     private static class Data {

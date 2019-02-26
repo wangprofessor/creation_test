@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.creation.test.dispatch.MoveLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dispatch_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/child1"
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:background="#ff0000"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/child2"
+        android:layout_width="400dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="250dp"
+        android:background="#ff0000"
+        />
+</com.creation.test.dispatch.MoveLayout>

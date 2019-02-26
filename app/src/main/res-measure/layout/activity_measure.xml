@@ -9,6 +9,6 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/a123"
+        android:src="@drawable/dispatch"
         />
 </android.support.constraint.ConstraintLayout>
