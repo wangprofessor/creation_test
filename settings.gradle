@@ -1,1 +1,4 @@
-include ':app', ':libgradle'
+include ':app', ':lib_gradle_study', ':lib_gradle_test/libtest', ':lib_gradle_test/libtest2'
+
+project(':lib_gradle_test/libtest').name = 'libtest'
+project(':lib_gradle_test/libtest2').name = 'libtest2'

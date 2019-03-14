@@ -9,7 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/libgradle" />
+            <option value="$PROJECT_DIR$/lib_gradle_study" />
+            <option value="$PROJECT_DIR$/lib_gradle_test/libtest" />
+            <option value="$PROJECT_DIR$/lib_gradle_test/libtest2" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

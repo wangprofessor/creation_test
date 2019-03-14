@@ -1,0 +1,76 @@
+/**
+ * 此脚本的作用是让一个模块及其子模块生成aar，并将所有aar及其依赖的本地lib拷贝到一个文件夹下
+ * 文件夹的目录是主模块下build/aar-multi
+ * 生成aar：在主模块中apply此文件，同步成功后点击主模块中的other/aarMultiCopy任务
+ * 使用aar：将生成的文件拷贝到libs目录下，并在gradle dependencies中加入"implementation fileTree(include: ['*.aar'], dir: 'libs/aar-multi')"
+ */
+
+gradle.addBuildListener(new BuildAdapter() {
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        Task copyTask = createCopyTask(project, project)
+        def mainAssemble = project.tasks.getByName("assembleDebug")
+        copyTask.dependsOn(mainAssemble)
+        aarMulti(project, mainAssemble, project, new HashSet<Project>())
+    }
+})
+
+/**
+ * 遍历依赖子模块并设置主模块assemble依赖子模块assemble
+ */
+static void aarMulti(Project mainProject, Task mainAssemble, Project project, Set<Project> projectSet) {
+    println "aar-multi, project name:$project.name"
+    project.configurations.each { configuration ->
+        def name = configuration.name
+        if (name == "implementation" || name == "api" || name == "compile") {
+            configuration.dependencies.all { dependency ->
+                if (dependency instanceof ProjectDependency) {
+                    def eachProject = ((ProjectDependency) dependency).dependencyProject
+                    if (projectSet.contains(eachProject)) {
+                        return
+                    } else {
+                        projectSet.add(eachProject)
+                    }
+                    println "aar-multi, dependency $eachProject"
+
+                    def assemble = eachProject.tasks.getByName("assembleDebug")
+                    def copyTask = createCopyTask(mainProject, eachProject)
+                    copyTask.dependsOn(assemble)
+                    mainAssemble.dependsOn(copyTask)
+
+                    // 递归
+                    aarMulti(mainProject, mainAssemble, eachProject, projectSet)
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 生成拷贝任务并设置依赖关系
+ */
+static Task createCopyTask(Project mainProject, Project project) {
+    def pathSet = new HashSet<String>()
+    project.configurations.each { configuration ->
+        def name = configuration.name
+        if (name == "implementation" || name == "api" || name == "compile") {
+            configuration.dependencies.all { dependency ->
+                if (dependency instanceof FileCollectionDependency) {
+                    def eachProject = (FileCollectionDependency) dependency
+                    eachProject.files.each { file ->
+                        if (file.absolutePath.endsWith('aar') && !pathSet.contains(file.absolutePath)) {
+                            pathSet.add(file.absolutePath)
+                            println "aar-multi, dependency file:$file.absolutePath"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    pathSet.add(project.file("build/outputs/aar/$project.name-debug.aar"))
+    def aarMultiCopy = project.task('aarMultiCopy', type: Copy) {
+        from project.files(pathSet)
+        into mainProject.file('build/aar-multi')
+    }
+    return aarMultiCopy
+}

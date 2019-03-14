@@ -1,4 +1,4 @@
-package com.creation.test.dispatch.scrollscale
+package com.lemon.faceu.gallery.scrollscale
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -15,7 +15,7 @@ class ScrollScaleCropView(context: Context, attrs: AttributeSet?) : ScrollScaleV
     private var paint: Paint? = null
 
     init {
-        bigModel = false
+        limitSameScale = false
     }
 
     override fun onDraw(canvas: Canvas) {

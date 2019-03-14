@@ -1,4 +1,4 @@
-package com.creation.test.dispatch.scrollscale
+package com.lemon.faceu.gallery.scrollscale
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
 
@@ -18,27 +17,29 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
     companion object {
         const val TAG = "ScrollScaleView"
         const val MAX_SCALE = 4f
+        const val INSIDE_SCALE = 0.8f
     }
 
     private val paint = Paint()
-    private var hasInit = false
+    var hasInit = false
+        private set
 
     val srcRect = Rect()
     val initRect = Rect()
     val limitRect = Rect()
     var initScale = 1f
-    var bigModel = true
+    var limitSameScale = true
+    var allowInsideLimit = true
 
     val dstRect = Rect() // 目标位置，此变量非常重要，是缩放和位置的最终体现
     var baseScale = 1f
-    set(value) {
-        field = value
-        Log.d(TAG, "field:$value")
-    }
+
     private var scale = 1f
     private val position = PointF()
     private val scalePosition = PointF()
+    private val insideLimitRect = Rect()
     private var isAnimating = false
+    private var isInsideLimit = false
 
     // 大图相关字段
     private var bigBitmapPath: String? = null
@@ -80,11 +81,11 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (!externalEvent) {
-            return if (event != null && scrollScaleGesture.onTouchEvent(event)) {
-                true
-            } else {
-                super.onTouchEvent(event)
+            if (event == null) {
+                return false
             }
+            scrollScaleGesture.onTouchEvent(event)
+            return true
         }
         return super.onTouchEvent(event)
     }
@@ -128,22 +129,23 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
         if (!checkEvent()) {
             return
         }
-        baseScale *= scale
-        scale = 1f
-        position.set(scalePosition)
+        if (isInsideLimit) {
+            animateScale(initScale, 100, PointF(width / 2f, height / 2f))
+        } else {
+            baseScale *= scale
+            scale = 1f
+            position.set(scalePosition)
+        }
     }
 
     fun onDoubleTap(anchor: PointF) {
-        if (!checkEvent()) {
-            return
-        }
-        if (!bigModel) {
+        if (!limitSameScale) {
             return
         }
 
-        val value: Float
+        val targetScale: Float
         val current = (baseScale * scale) / MAX_SCALE * 4
-        value = when {
+        targetScale = when {
             current >= 1 && current < 1.66f -> {
                 MAX_SCALE / 2
             }
@@ -154,8 +156,16 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
                 1f
             }
         }
-        val animator = ValueAnimator.ofFloat(scale, value / baseScale)
-        animator.duration = 500
+        animateScale(targetScale, 500L, anchor)
+    }
+
+    private fun animateScale(targetScale: Float, duration: Long, anchor: PointF) {
+        if (!checkEvent()) {
+            return
+        }
+
+        val animator = ValueAnimator.ofFloat(scale, targetScale / baseScale)
+        animator.duration = duration
         animator.addUpdateListener {
             calculateForScale(it.animatedValue as Float, anchor)
             invalidate()
@@ -167,6 +177,7 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
                 scale = 1f
                 position.set(scalePosition)
             }
+
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {}
@@ -206,7 +217,15 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
                 scrollScaleBigBitmap = ScrollScaleBigBitmap(this, bigBitmapPath!!, Point(width, height), bigBitmapDecoder!!)
                 srcRect.set(0, 0, scrollScaleBigBitmap!!.fileSize.x, scrollScaleBigBitmap!!.fileSize.y)
             }
+
             initSize()
+            val dScale = (1 - INSIDE_SCALE) / 2
+            insideLimitRect.set(
+                    initRect.left + (initRect.width() * dScale).toInt(),
+                    initRect.top + (initRect.height() * dScale).toInt(),
+                    initRect.right - (initRect.width() * dScale).toInt(),
+                    initRect.bottom - (initRect.height() * dScale).toInt()
+            )
 
             hasInit = true
         }
@@ -254,6 +273,7 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
         initRect.set(limitLeft, limitTop, limitLeft + limitWidth, limitTop + limitHeight)
         dstRect.set(initRect)
         limitRect.set(initRect)
+
         baseScale = scale
         initScale = scale
     }
@@ -268,7 +288,7 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
 
         position.x -= deltaX
         position.y -= deltaY
-        if (bigModel) {
+        if (limitSameScale) {
             if (dstRect.width() <= width) {
                 position.x += deltaX
             } else {
@@ -323,7 +343,7 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
 
         scalePosition.set(position)
 
-        if (bigModel) {
+        if (limitSameScale) {
             val widthScale = width.toFloat() / srcRect.width() / baseScale
             val heightScale = height.toFloat() / srcRect.height() / baseScale
 
@@ -421,11 +441,20 @@ open class ScrollScaleView(context: Context, attrs: AttributeSet?) : ImageView(c
         dstX += scalePosition.x
         dstY += scalePosition.y
         dstRect.set(dstX.toInt() - 1, dstY.toInt() - 1, dstX.toInt() + dstWidth.toInt() + 1, dstY.toInt() + dstHeight.toInt() + 1)
-        if (!dstRect.contains(limitRect)) {
-            dstRect.set(initRect)
-            position.set(0f, 0f)
-            baseScale = initScale
-            scale = 1f
+
+        if (limitSameScale && allowInsideLimit) {
+            isInsideLimit = !dstRect.contains(limitRect)
+            if (!dstRect.contains(insideLimitRect)) {
+                dstRect.set(insideLimitRect)
+                scale = initScale * INSIDE_SCALE / baseScale
+                position.set(0f, 0f)
+            }
+        } else {
+            if (!dstRect.contains(limitRect)) {
+                dstRect.set(initRect)
+                scale = initScale / baseScale
+                position.set(0f, 0f)
+            }
         }
     }
 }

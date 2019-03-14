@@ -1,4 +1,4 @@
-package com.creation.test.dispatch.scrollscale
+package com.lemon.faceu.gallery.scrollscale
 
 import android.content.Context
 import android.graphics.BitmapRegionDecoder
@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,10 @@ import java.io.File
 import java.lang.Exception
 
 class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(context, attrs) {
+    companion object {
+        private const val TAG = "ScrollScaleViewPager"
+    }
+
     class ItemHolder(
             val path: String?,
             val width: Int,
@@ -26,17 +31,18 @@ class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(c
     }
 
     lateinit var itemHolderSupplier: (container: ViewGroup, position: Int) -> ItemHolder
+    lateinit var sizeSupplier: () -> Int
     lateinit var scrollScaleViewFinder: (itemView: View) -> ScrollScaleView
     lateinit var currentView: ScrollScaleView
         private set
+    private lateinit var currentItemView: View
 
-    private var itemSize = 0
     private val scrollScaleGesture: ScrollScaleGesture = ScrollScaleGesture(this)
     private var isScrolling = false
 
     init {
         scrollScaleGesture.onScroll = { dx, dy ->
-            if (currentView.dstRect.width() <= currentView.width) {
+            if (!currentView.hasInit || currentView.dstRect.width() <= currentView.width) {
                 fakeDragBy(-dx)
                 currentView.onScroll(0f, dy)
             } else {
@@ -125,11 +131,16 @@ class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(c
         })
     }
 
-    fun initAdapter(size: Int) {
-        itemSize = size
+    override fun fakeDragBy(xOffset: Float) {
+        if (isFakeDragging) {
+            super.fakeDragBy(xOffset)
+        }
+    }
+
+    fun initAdapter() {
         adapter = object : PagerAdapter() {
             override fun getCount(): Int {
-                return itemSize
+                return sizeSupplier()
             }
 
             override fun isViewFromObject(view: View, any: Any): Boolean {
@@ -137,7 +148,8 @@ class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(c
             }
 
             override fun setPrimaryItem(container: ViewGroup, position: Int, any: Any) {
-                currentView = scrollScaleViewFinder(any as View)
+                currentItemView = any as View
+                currentView = scrollScaleViewFinder(currentItemView)
             }
 
             override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -174,7 +186,7 @@ class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(c
                         scale = Math.pow(scale.toDouble(), 1.0 / 3).toFloat()
                         scale = Math.max(scale, 1f)
                         val requestOptions = RequestOptions()
-                                .override((itemHolder.width / scale).toInt(), (itemHolder.height / scale).toInt())
+                                .override((itemHolder.width / scale).toInt(), (itemHolder.height/ scale).toInt())
                                 .fitCenter()
                         Glide.with(itemHolder.scrollScaleView)
                                 .load(File(itemHolder.path))
@@ -200,27 +212,31 @@ class ScrollScaleViewPager(context: Context, attrs: AttributeSet?) : ViewPager(c
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        if (itemSize == 0) {
+        if (ev == null) {
+            return false
+        }
+        if (sizeSupplier() == 0) {
             return super.onInterceptTouchEvent(ev)
         }
         if (isScrolling) {
             super.onInterceptTouchEvent(ev)
-            return true
         }
-        return super.onInterceptTouchEvent(ev)
+        return true
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
-        if (itemSize == 0) {
+        if (ev == null) {
+            return false
+        }
+        if (sizeSupplier() == 0) {
             return super.onTouchEvent(ev)
         }
         if (isScrolling) {
             super.onTouchEvent(ev)
             return true
         }
-        if (ev == null) {
-            return false
-        }
-        return scrollScaleGesture.onTouchEvent(ev)
+        scrollScaleGesture.onTouchEvent(ev)
+        currentItemView.dispatchTouchEvent(ev)
+        return true
     }
 }
