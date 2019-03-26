@@ -21,6 +21,9 @@ import com.creation.test.measure.MeasureService;
 import com.creation.test.scheme.SchemeActivity;
 import com.creation.test.span.SpanActivity;
 import com.creation.test.touch.TouchActivity;
+import com.creation.ultrasonic.DoctorSingleton;
+import com.creation.ultrasonic.IDoctor;
+import com.creation.ultrasonic.IExamination;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.e(TAG, "MainActivity");
+        DoctorSingleton.instance().initExamination(new IDoctor.IPrintFilter() {
+            @Override
+            public int indexOf(String s) {
+                int index = s.indexOf("com.creation");
+                if (index >= 0) {
+                    return index;
+                }
+                return 0;
+            }
+        }, IExamination.Type.Bitmap, IExamination.Type.Thread);
 
         MeasureService.Companion.instance().init(this, new Function0<Unit>() {
             @Override

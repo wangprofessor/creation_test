@@ -14,8 +14,6 @@
             <option value="$PROJECT_DIR$/lib_gradle_test/libtest2" />
             <option value="$PROJECT_DIR$/lib_gradle_test/libtest3" />
             <option value="$PROJECT_DIR$/libplugin" />
-            <option value="$PROJECT_DIR$/ultrasonic" />
-            <option value="$PROJECT_DIR$/yahfa" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

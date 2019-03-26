@@ -25,9 +25,9 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url rootProject.uri('repo')}
         google()
         jcenter()
+        maven { url rootProject.uri('repo')}
         maven { url 'https://maven.byted.org/repository/faceu/' }
 
     }
