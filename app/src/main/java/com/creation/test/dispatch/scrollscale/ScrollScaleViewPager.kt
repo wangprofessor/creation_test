@@ -1,4 +1,4 @@
-package com.lemon.faceu.gallery.scrollscale
+package com.creation.faceu.gallery.scrollscale
 
 import android.content.Context
 import android.graphics.BitmapRegionDecoder
@@ -6,7 +6,6 @@ import android.graphics.Rect
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup

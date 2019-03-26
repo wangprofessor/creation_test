@@ -1,9 +1,8 @@
-package com.lemon.faceu.gallery.scrollscale
+package com.creation.faceu.gallery.scrollscale
 
 import android.graphics.*
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 
 /**

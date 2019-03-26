@@ -1,4 +1,0 @@
-println('//////' + buildscript.sourceFile)
-println('//////' + project.buildscript.sourceFile)
-println('//////' + this.name)
-new RuntimeException().printStackTrace()

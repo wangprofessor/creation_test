@@ -25,7 +25,6 @@ import com.creation.test.touch.TouchActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import faceu.lemon.com.libtest.abc;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
@@ -45,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        abc a;
 
         RecyclerView recyclerView = findViewById(R.id.list);
         LinearLayoutManager layout = new LinearLayoutManager(this);

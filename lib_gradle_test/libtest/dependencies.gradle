@@ -1,0 +1,302 @@
+/**
+ * 此脚本的作用是分析apply此脚本的模块的依赖情况，一般在app中apply此文件
+ * apply此脚本并同步成功后，会在对应模块下生成：other/a__dependencies任务，双击该任务开始分析，结果通过打印输出
+ */
+gradle.addBuildListener(new BuildAdapter() {
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+        def dependencyMap = new HashMap<String, Map<VersionData, Set<Project>>>()
+        def projectSet = new HashSet<Project>()
+        projectSet.add(project)
+        def a_dependencies = project.task('a__dependencies')
+        allProject(dependencyMap, project, projectSet, a_dependencies)
+        a_dependencies.doLast {
+            def sortDependencyMap = new TreeMap<String, Map<VersionData, Set<Project>>>(new Comparator<String>() {
+                @Override
+                int compare(String before, String after) {
+                    return before > after ? 1 : -1
+                }
+            })
+            sortDependencyMap.putAll(dependencyMap)
+
+            def eachVersionMapEntry = { Map.Entry<String, Map<VersionData, Set<Project>>> versionMapEntry, Runnable runnable ->
+                def name = versionMapEntry.key
+                versionMapEntry.value.each { projectSetEntry ->
+                    def versionData = projectSetEntry.key
+                    def builder = new StringBuilder()
+                    builder.append(' ' * 8)
+                    projectSetEntry.value.each { eachProject ->
+                        builder.append(',').append(eachProject.name)
+                    }
+                    builder.append(' ' * 8)
+                    versionData.artifacts.each { artifact ->
+                        builder.append(',').append(artifact.file)
+                    }
+                    runnable()
+                    println(name + ':' + versionData.version + builder)
+                }
+            }
+
+            println('*************外部不一致的依赖->开始***************')
+            println()
+            def externalModuleSize = 0
+            def externalGroupSize = 0
+            sortDependencyMap.each { versionMapEntry ->
+                if (versionMapEntry.value.size() < 2) {
+                    return
+                }
+                externalGroupSize++
+                eachVersionMapEntry(versionMapEntry) {
+                    externalModuleSize++
+                }
+                println()
+            }
+            println("*************外部不一致的依赖->结束, 共${externalGroupSize}组, ${externalModuleSize}个***************")
+
+            println()
+            println()
+            println('*************外部一致的依赖->开始***************')
+            println()
+            externalModuleSize = 0
+            sortDependencyMap.each { versionMapEntry ->
+                if (versionMapEntry.value.size() >= 2) {
+                    return
+                }
+                eachVersionMapEntry(versionMapEntry) {
+                    externalModuleSize++
+                }
+            }
+            println()
+            println("*************外部一致的依赖->结束, 共${externalModuleSize}个***************")
+
+            println()
+            println()
+            println('*************本地依赖->开始***************')
+            println()
+            def localFileMap = new HashMap<String, Set<Project>>()
+            projectSet.each { eachProject ->
+                eachProject.configurations.each { configuration ->
+                    def configurationName = configuration.name
+                    if (configurationName == 'implementation' || configurationName == 'api' || configurationName == 'compile') {
+                        configuration.dependencies.each { dependency ->
+                            if (dependency instanceof FileCollectionDependency) {
+                                dependency.files.each { eachFile ->
+                                    def eachKey = eachFile.absolutePath
+                                    def localProjectSet = localFileMap.get(eachKey)
+                                    if (localProjectSet == null) {
+                                        localProjectSet = new HashSet<Project>()
+                                        localFileMap.put(eachKey, localProjectSet)
+                                    }
+                                    localProjectSet.add(eachProject)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            def localFileSize = 0
+            localFileMap.each { localFileEntry ->
+                def builder = new StringBuilder()
+                builder.append(' ' * 8)
+                localFileEntry.value.each { eachProject ->
+                    builder.append(',').append(eachProject.name)
+                }
+                localFileSize++
+                println(localFileEntry.key + builder)
+            }
+            println()
+            println("*************本地依赖->结束, 共${localFileSize}个***************")
+
+
+            println()
+            println()
+            println('*************外部so依赖->开始***************')
+            println()
+            def externalSoSize = 0
+            sortDependencyMap.each { versionMapEntry ->
+                def name = versionMapEntry.key
+                versionMapEntry.value.each { projectSetEntry ->
+                    def versionData = projectSetEntry.key
+                    versionData.artifacts.each { artifact ->
+                        def aarFile = artifact.file
+                        if (!aarFile.name.endsWith('.aar')) {
+                            return
+                        }
+                        def unzipDest = new File(aarFile.parent, 'unzip/')
+                        project.ant.unzip(src : aarFile, dest : unzipDest)
+                        def fileTree = project.fileTree(dir: unzipDest, include: '**/*.so')
+                        fileTree.each { eachFile ->
+                            if (eachFile.name.endsWith('.so')) {
+                                def builder = new StringBuilder()
+                                builder.append(' ' * 8)
+                                projectSetEntry.value.each { eachProject ->
+                                    builder.append(',').append(eachProject.name)
+                                }
+                                externalSoSize++
+                                println(eachFile.parentFile.name + ':' + eachFile.name + ' ' * 8 + ',' + name + ':' + versionData.version + builder + ' ' * 8 + ',' + aarFile)
+                            }
+                        }
+                        unzipDest.deleteDir()
+                    }
+                }
+            }
+            println()
+            println("*************外部so依赖->结束, 共${externalSoSize}个***************")
+
+            println()
+            println()
+            println('*************本地so依赖->开始***************')
+            println()
+            def localSoMap = new HashMap<String, FileData>()
+            projectSet.each { eachProject ->
+                eachProject.configurations.each { configuration ->
+                    def configurationName = configuration.name
+                    if (configurationName == 'implementation' || configurationName == 'api' || configurationName == 'compile') {
+                        configuration.dependencies.each { dependency ->
+                            if (dependency instanceof FileCollectionDependency) {
+                                dependency.files.each { eachAarFile ->
+                                    if (!eachAarFile.name.endsWith('.aar')) {
+                                        return
+                                    }
+                                    def unzipDest = new File(eachAarFile.parent, 'unzip/')
+                                    eachProject.ant.unzip(src : eachAarFile, dest : unzipDest)
+                                    def unzipFileTree = eachProject.fileTree(dir: unzipDest, include: '**/*.so')
+                                    unzipFileTree.each { eachSoFile ->
+                                        def eachKey = eachSoFile.absolutePath
+                                        def fileData = localSoMap.get(eachKey)
+                                        if (fileData == null) {
+                                            fileData = new FileData(eachSoFile, eachAarFile)
+                                            localSoMap.put(eachKey, fileData)
+                                        }
+                                        fileData.projectSet.add(eachProject)
+                                    }
+                                    unzipDest.deleteDir()
+
+                                    def projectFileTree = eachProject.fileTree(dir: eachProject.projectDir, include: '**/*.so')
+                                    projectFileTree.each { eachSoFile ->
+                                        def eachKey = eachSoFile.absolutePath
+                                        def fileData = localSoMap.get(eachKey)
+                                        if (fileData == null) {
+                                            fileData = new FileData(eachSoFile, null)
+                                            localSoMap.put(eachKey, fileData)
+                                        }
+                                        fileData.projectSet.add(eachProject)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            def localSoSize = 0
+            localSoMap.each { localSoEntry ->
+                def fileData = localSoEntry.value
+                def builder = new StringBuilder()
+                builder.append(' ' * 8)
+                fileData.projectSet.each { eachProject ->
+                    builder.append(',').append(eachProject.name)
+                }
+                File path = fileData.aarFile == null ? fileData.soFile : fileData.aarFile
+                localSoSize++
+                println(fileData.soFile.parentFile.name + ':' + fileData.soFile.name + ' ' * 8 + path + builder)
+            }
+            println()
+            println("*************本地so依赖->结束, 共${localSoSize}个***************")
+        }
+    }
+})
+
+static void allProject(Map<String, Map<VersionData, Set<Project>>> dependencyMap, Project project, Set<Project> projectSet, Task dependencyTask) {
+    def configurationArray = [
+            project.configurations.implementation,
+            project.configurations.api,
+            project.configurations.compile
+    ]
+    configurationArray.each { configuration ->
+        def externalConfiguration = configuration.copy { dependency ->
+            return dependency instanceof ExternalDependency
+        }
+        externalConfiguration.setCanBeResolved(true)
+        def artifacts = new HashSet<ResolvedArtifact>()
+        def task = project.task('a_' + project.name + '_' + configuration.name + '_' + 'dependencies') {
+            dependsOn externalConfiguration
+            doLast {
+                def container = new HashSet<ResolvedDependency>()
+                allDependency(container, externalConfiguration.resolvedConfiguration.firstLevelModuleDependencies)
+                container.each { resolvedDependency ->
+                    def name = resolvedDependency.moduleGroup + ':' + resolvedDependency.moduleName
+                    def version = resolvedDependency.moduleVersion
+                    def versionMap = dependencyMap.get(name)
+                    if (versionMap == null) {
+                        versionMap = new HashMap<VersionData, Set<String>>()
+                        dependencyMap.put(name, versionMap)
+                    }
+                    def versionData = new VersionData(version, resolvedDependency.moduleArtifacts)
+                    def versionProjectSet = versionMap.get(versionData)
+                    if (versionProjectSet == null) {
+                        versionProjectSet = new HashSet()
+                        versionMap.put(versionData, versionProjectSet)
+                    }
+                    versionProjectSet.add(project)
+
+                    artifacts.addAll(versionData.artifacts)
+                }
+            }
+        }
+        dependencyTask.dependsOn(task)
+
+        def projectConfiguration = configuration.copy { dependency ->
+            return dependency instanceof ProjectDependency
+        }
+        projectConfiguration.dependencies.each { dependency ->
+            ProjectDependency projectDependency = dependency
+            Project subProject = projectDependency.dependencyProject
+            if (projectSet.contains(subProject)) {
+                return
+            }
+            projectSet.add(subProject)
+            allProject(dependencyMap, subProject, projectSet, dependencyTask)
+        }
+    }
+}
+
+static void allDependency(Set<ResolvedDependency> container, Set<ResolvedDependency> resolvedDependencySet) {
+    resolvedDependencySet.each { resolvedDependency ->
+        container.add(resolvedDependency)
+        allDependency(container, resolvedDependency.children)
+    }
+}
+
+class VersionData {
+    final String version
+    final Set<ResolvedArtifact> artifacts
+
+    VersionData(String version, Set<ResolvedArtifact> artifacts) {
+        this.version = version
+        this.artifacts = artifacts
+    }
+
+    @Override
+    int hashCode() {
+        return version.hashCode()
+    }
+
+    @Override
+    boolean equals(Object obj) {
+        if (obj instanceof VersionData) {
+            return version == obj.version
+        }
+        return false
+    }
+}
+
+class FileData {
+    final File soFile
+    final File aarFile
+    final Set<Project> projectSet = new HashSet()
+
+    FileData(File soFile, File aarFile) {
+        this.soFile = soFile
+        this.aarFile = aarFile
+    }
+}

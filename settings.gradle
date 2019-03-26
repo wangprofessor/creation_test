@@ -1,4 +1,12 @@
-include ':app', ':lib_gradle_study', ':lib_gradle_test/libtest', ':lib_gradle_test/libtest2'
+def selfDir = buildscript.sourceFile.parentFile
+def include = { String... modulePaths ->
+    modulePaths.each { String modulePath ->
+        def path = modulePath.substring(1)
+        def file = new File(selfDir, path)
+        def name = ':' + file.name
+        include(name)
+        project(name).projectDir = file
+    }
+}
 
-project(':lib_gradle_test/libtest').name = 'libtest'
-project(':lib_gradle_test/libtest2').name = 'libtest2'
+include ':app', ':lib_gradle_study', ':lib_gradle_test/libtest', ':lib_gradle_test/libtest2', ':lib_gradle_test/libtest3', ':libplugin', ':yahfa', ':ultrasonic'

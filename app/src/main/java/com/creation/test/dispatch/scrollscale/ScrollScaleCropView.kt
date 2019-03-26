@@ -1,4 +1,4 @@
-package com.lemon.faceu.gallery.scrollscale
+package com.creation.faceu.gallery.scrollscale
 
 import android.content.Context
 import android.graphics.Bitmap

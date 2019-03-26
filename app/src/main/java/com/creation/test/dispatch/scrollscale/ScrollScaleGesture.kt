@@ -1,4 +1,4 @@
-package com.lemon.faceu.gallery.scrollscale
+package com.creation.faceu.gallery.scrollscale
 
 import android.annotation.SuppressLint
 import android.graphics.PointF
