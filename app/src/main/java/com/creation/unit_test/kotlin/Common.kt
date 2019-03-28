@@ -34,9 +34,10 @@ object CommonTest {
         tryIfEnable {
             a.invoke()
             b.invoke()
-            fun1()
         }
+
+        fun1(0, Runnable {})
     }
 
-    private fun fun1() {}
+    private fun fun1(aa: Int, runnable: Runnable) {}
 }

@@ -39,6 +39,7 @@
             android:name=".measure.MeasureActivity"
             />
         <activity android:name=".dispatch.DispatchActivity" />
+        <activity android:name=".view_pager.ViewPagerActivity" />
 
     </application>
 </manifest>

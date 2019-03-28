@@ -9,7 +9,6 @@ buildscript {
         maven {
             url  "http://dl.bintray.com/vigidroid/maven"
         }
-        maven { url uri('repo')}
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.2'
@@ -18,8 +17,6 @@ buildscript {
         classpath gradleApi()
         classpath 'com.android.tools.build:gradle:3.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
-        classpath 'com.creation:plugin:0.0.1'
     }
 }
 
@@ -27,8 +24,5 @@ allprojects {
     repositories {
         google()
         jcenter()
-        maven { url rootProject.uri('repo')}
-        maven { url 'https://maven.byted.org/repository/faceu/' }
-
     }
 }

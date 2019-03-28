@@ -9,4 +9,4 @@ def include = { String... modulePaths ->
     }
 }
 
-include ':app', ':lib_gradle_study', ':lib_gradle_test/libtest', ':lib_gradle_test/libtest2', ':lib_gradle_test/libtest3', ':libplugin'
+include ':app'
