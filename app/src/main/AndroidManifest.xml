@@ -40,6 +40,8 @@
             />
         <activity android:name=".dispatch.DispatchActivity" />
         <activity android:name=".view_pager.ViewPagerActivity" />
+        <activity android:name=".memory.MemoryActivity" />
+        <activity android:name=".dot9.Dot9Activity" />
 
     </application>
 </manifest>

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.creation.test.R;
 
@@ -28,11 +28,11 @@ public class ViewPagerActivity extends AppCompatActivity {
         fragmentList.add(new FragmentText());
         fragmentList.add(new FragmentText());
         fragmentList.add(new FragmentText());
-        fragmentList.get(0).textString = "000000000000000000000000000000000000000000000";
-        fragmentList.get(1).textString = "111111111111111111111111111111111111111111111";
-        fragmentList.get(2).textString = "222222222222222222222222222222222222222222222";
+        fragmentList.get(0).resource = R.drawable.view_pager_image;
+        fragmentList.get(1).resource = R.drawable.view_pager_image;
+        fragmentList.get(2).resource = R.drawable.view_pager_image;
 
-        final OneFragmentPagerAdapter adapter = new OneFragmentPagerAdapter(getSupportFragmentManager()) {
+        final SingleFragmentPagerAdapter adapter = new SingleFragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
                 return fragmentList.size();
@@ -47,13 +47,13 @@ public class ViewPagerActivity extends AppCompatActivity {
     }
 
     public static class FragmentText extends Fragment {
-        public String textString;
+        public int resource;
 
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            TextView textView = new TextView(container.getContext());
-            textView.setText(textString);
+            ImageView textView = new ImageView(container.getContext());
+            textView.setImageResource(resource);
             return textView;
         }
     }

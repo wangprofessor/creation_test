@@ -18,8 +18,8 @@ class MeasureServiceImpl: IMeasureService {
     override fun init(activity: Activity, finish: () -> Unit) {
         var count = 0
         val checkFinish = {
-            count += 1
-            if (count == 1) {
+            count++
+            if (count == 3) {
                 isInit = true
                 finish()
             }
@@ -79,6 +79,7 @@ class MeasureServiceImpl: IMeasureService {
             params.width = WindowManager.LayoutParams.MATCH_PARENT
             params.height = WindowManager.LayoutParams.MATCH_PARENT
             params.format = PixelFormat.TRANSLUCENT
+            params.flags = params.flags or WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN
 
             it.addView(measureView, params)
         }

@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class OneFragmentPagerAdapter extends PagerAdapter {
+public abstract class SingleFragmentPagerAdapter extends PagerAdapter {
     private final FragmentManager mFragmentManager;
     private final Set<Fragment> mVisibilitySet = new HashSet<>();
     private Fragment mCurrentPrimaryItem = null;
 
-    public OneFragmentPagerAdapter(FragmentManager fragmentManager) {
+    public SingleFragmentPagerAdapter(FragmentManager fragmentManager) {
         mFragmentManager = fragmentManager;
     }
 
