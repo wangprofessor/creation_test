@@ -5,5 +5,4 @@ object CommonTest {
 }
 
 fun main(args: Array<String>) {
-
 }
