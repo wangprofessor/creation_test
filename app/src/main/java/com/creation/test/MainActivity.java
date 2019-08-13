@@ -20,6 +20,7 @@ import com.creation.test.dot9.Dot9Activity;
 import com.creation.test.measure.MeasureActivity;
 import com.creation.test.measure.MeasureService;
 import com.creation.test.memory.MemoryActivity;
+import com.creation.test.proc.ProcActivity;
 import com.creation.test.scheme.SchemeActivity;
 import com.creation.test.span.SpanActivity;
 import com.creation.test.touch.TouchActivity;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("view_pager", ViewPagerActivity.class));
         list.add(new Data("memory", MemoryActivity.class));
         list.add(new Data("dot9", Dot9Activity.class));
+        list.add(new Data("proc", ProcActivity.class));
     }
 
     private static class Data {

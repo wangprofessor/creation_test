@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.creation.test.proc.ProcUtil;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +22,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("com.creation.test", appContext.getPackageName());
+        ProcUtil.getMemInfoByType(appContext, "wangshouchao");
     }
 }

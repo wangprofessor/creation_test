@@ -42,6 +42,7 @@
         <activity android:name=".view_pager.ViewPagerActivity" />
         <activity android:name=".memory.MemoryActivity" />
         <activity android:name=".dot9.Dot9Activity" />
+        <activity android:name=".proc.ProcActivity" />
 
     </application>
 </manifest>
