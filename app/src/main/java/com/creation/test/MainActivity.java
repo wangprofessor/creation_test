@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.creation.test.animation.AnimationActivity;
+import com.creation.test.appbar.AppbarActivity;
 import com.creation.test.clip.ClipActivity;
 import com.creation.test.dispatch.DispatchActivity;
 import com.creation.test.dot9.Dot9Activity;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("memory", MemoryActivity.class));
         list.add(new Data("dot9", Dot9Activity.class));
         list.add(new Data("proc", ProcActivity.class));
+        list.add(new Data("appbar", AppbarActivity.class));
     }
 
     private static class Data {
