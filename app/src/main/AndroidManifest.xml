@@ -43,7 +43,7 @@
         <activity android:name=".memory.MemoryActivity" />
         <activity android:name=".dot9.Dot9Activity" />
         <activity android:name=".proc.ProcActivity" />
-        <activity android:name=".appbar.AppbarActivity" />
+        <activity android:name=".animation_drawable.AnimationDrawableActivity" />
 
     </application>
 </manifest>
