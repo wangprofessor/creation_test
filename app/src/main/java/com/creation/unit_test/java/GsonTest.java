@@ -1,6 +1,5 @@
 package com.creation.unit_test.java;
 
-import com.creation.unit_test.kotlin.CommonTest;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Constructor;

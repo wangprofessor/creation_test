@@ -1,16 +1,18 @@
-package com.creation.faceu.gallery.scrollscale
+package com.creation.test.dispatch.scrollscale
 
 import android.content.Context
 import android.graphics.BitmapRegionDecoder
 import android.graphics.Rect
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.creation.faceu.gallery.scrollscale.ScrollScaleGesture
+import com.creation.faceu.gallery.scrollscale.ScrollScaleView
 import java.io.File
 import java.lang.Exception
 

@@ -10,3 +10,15 @@ def include = { String... modulePaths ->
 }
 
 include ':app'
+
+File file = new File(                                                      // new
+        settingsDir,                                               // new
+        'flutter_module/.android/include_flutter.groovy'                      // new
+)
+System.out.println("wang:" + file.exists())
+
+setBinding(new Binding([gradle: this]))                                 // new
+evaluate(new File(                                                      // new
+        settingsDir,                                               // new
+        'flutter_module/.android/include_flutter.groovy'                      // new
+))

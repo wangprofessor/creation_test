@@ -1,10 +1,9 @@
 package com.creation.test.appbar
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.creation.test.R
+import com.google.android.material.appbar.AppBarLayout
 
 class AppbarActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

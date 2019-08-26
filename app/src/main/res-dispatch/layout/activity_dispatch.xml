@@ -5,17 +5,18 @@
     android:layout_height="match_parent"
     >
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/child1"
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:background="#ff0000"
         />
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/child2"
         android:layout_width="400dp"
         android:layout_height="200dp"
         android:layout_marginTop="250dp"
         android:background="#ff0000"
         />
+
 </com.creation.test.dispatch.MoveLayout>

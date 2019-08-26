@@ -3,15 +3,16 @@ package com.creation.test;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.creation.test.animation.AnimationActivity;
 import com.creation.test.animation_drawable.AnimationDrawableActivity;
@@ -19,6 +20,7 @@ import com.creation.test.appbar.AppbarActivity;
 import com.creation.test.clip.ClipActivity;
 import com.creation.test.dispatch.DispatchActivity;
 import com.creation.test.dot9.Dot9Activity;
+import com.creation.test.flutter.MyFlutterActivity;
 import com.creation.test.measure.MeasureActivity;
 import com.creation.test.measure.MeasureService;
 import com.creation.test.memory.MemoryActivity;
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         list.add(new Data("proc", ProcActivity.class));
         list.add(new Data("appbar", AppbarActivity.class));
         list.add(new Data("animation_drawable", AnimationDrawableActivity.class));
+        list.add(new Data("flutter", MyFlutterActivity.class));
     }
 
     private static class Data {

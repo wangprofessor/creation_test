@@ -44,6 +44,7 @@
         <activity android:name=".dot9.Dot9Activity" />
         <activity android:name=".proc.ProcActivity" />
         <activity android:name=".animation_drawable.AnimationDrawableActivity" />
+        <activity android:name=".flutter.MyFlutterActivity" />
 
     </application>
 </manifest>
